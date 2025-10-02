@@ -3,7 +3,6 @@
   "name": "customvenom-workers-api",
   "main": "src/index.ts",
 
-<<<<<<< HEAD
   // Keep this to match your local runtime; you can bump after upgrading wrangler everywhere.
   "compatibility_date": "2025-09-27",
 
@@ -23,33 +22,6 @@
         "R2_ENDPOINT": "https://<your-account-id>.r2.cloudflarestorage.com",
         "R2_BUCKET": "customvenom-data"
       }
-=======
-  // Use a supported compatibility date to avoid the wrangler warning you saw.
-  // When you upgrade wrangler globally, you can bump this back up.
-  "compatibility_date": "2025-09-27",
-
-  // Optional dashboard logs/metrics
-  "observability": {
-    "enabled": true
-  },
-
-  // Simple environment variables (non-secret)
-  // Remove or adjust if you don't want these yet.
-  "vars": {
-    "R2_ENDPOINT": "https://a1bea2b4d0102a08b0fec14a6be3b75f.r2.cloudflarestorage.com",
-    "R2_BUCKET": "customvenom-data"
-  },
-
-  // Environment-specific overrides
-  "env": {
-    "preview": {
-      "name": "customvenom-workers-api-preview"
-      // Add bindings here later (e.g., r2_buckets, vars, routes)
-    },
-    "production": {
-      "name": "customvenom-workers-api"
-      // Add bindings here later (e.g., r2_buckets, vars, routes)
->>>>>>> ff821ea (error fixes)
     }
   }
 }
