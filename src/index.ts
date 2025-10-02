@@ -11,8 +11,50 @@
  * Learn more at https://developers.cloudflare.com/workers/
  */
 
-export default {
-	async fetch(request, env, ctx): Promise<Response> {
-		return new Response('Hello World!');
-	},
-} satisfies ExportedHandler<Env>;
+import { Hono } from 'hono'
+
+import { cors } from 'hono/cors'
+
+import type { Env } from '../worker-configuration' 
+
+const app = new Hono()
+
+// CORS for local dev + your domain
+
+app.use('*', cors({
+
+origin: ['http://localhost:3000', 'https://customvenom.com', 'https://www.customvenom.com'],
+
+allowMethods: ['GET', 'POST', 'OPTIONS'],
+
+allowHeaders: ['Content-Type', 'Authorization'],
+
+}))
+
+app.get('/health', (c) => c.json({ ok: true }))
+
+app.post('/league/config', async (c) => {
+
+try {
+
+const body = await c.req.json()
+
+// TODO: validate & persist
+
+return c.json({ received: body }, 200)
+
+} catch {
+
+return c.json({ error: 'Invalid JSON' }, 400)
+
+}
+
+})
+app.get('/info', (c) => {
+
+const env = c.env as Env
+
+return c.json({ endpoint: env.R2_ENDPOINT, bucket: env.R2_BUCKET })
+
+})
+export default app
