@@ -33,13 +33,20 @@ allowHeaders: ['Content-Type', 'Authorization'],
 
 app.get('/health', (c) => c.json({ ok: true }))
 
+
+app.get('/info', (c) => {
+
+const env = c.env as Env
+
+return c.json({ endpoint: env.R2_ENDPOINT, bucket: env.R2_BUCKET })
+
+})
+app.get('/', (c) => c.json({ service: 'customvenom-api', ok: true }))
 app.post('/league/config', async (c) => {
 
 try {
 
 const body = await c.req.json()
-
-// TODO: validate & persist
 
 return c.json({ received: body }, 200)
 
@@ -50,11 +57,5 @@ return c.json({ error: 'Invalid JSON' }, 400)
 }
 
 })
-app.get('/info', (c) => {
 
-const env = c.env as Env
-
-return c.json({ endpoint: env.R2_ENDPOINT, bucket: env.R2_BUCKET })
-
-})
 export default app
