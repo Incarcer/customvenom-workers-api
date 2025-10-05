@@ -8,22 +8,20 @@
 
   "observability": { "enabled": true },
 
-  // Optional non-secret vars (you can delete this block if you don't use them in code)
-  "vars": {
-    "R2_ENDPOINT": "https://a1bea2b4d0102a08b0fec14a6be3b75f.r2.cloudflarestorage.com",
-    "R2_BUCKET": "customvenom-data"
-  },
+  // Top-level vars are optional; remove them if you don't use them in code.
+  // If you keep them, note they are NOT inherited by environments.
 
   "env": {
-  "production": {
-    "name": "customvenom-workers-api",
-    "r2_buckets": [
-      { "bucket_name": "customvenom-data", "binding": "customvenom_data" }
-    ],
-    "vars": {
-      "R2_ENDPOINT": "https://a1bea2b4d0102a08b0fec14a6be3b75f.r2.cloudflarestorage.com",
-      "R2_BUCKET": "customvenom-data"
+    "production": {
+      "name": "customvenom-workers-api",
+      "r2_buckets": [
+        { "bucket_name": "customvenom-data", "binding": "customvenom_data" }
+      ],
+      // Optional non-secret vars used by your Worker; safe to remove if unused.
+      "vars": {
+        "R2_ENDPOINT": "https://<your-account-id>.r2.cloudflarestorage.com",
+        "R2_BUCKET": "customvenom-data"
+      }
     }
   }
-}
 }

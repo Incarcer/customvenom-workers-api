@@ -1,5 +1,3 @@
-// C:\Users\JDewe\Documents\customvenom\customvenom\customvenom-workers-api\src\index.ts
-
 type Env = {
 	customvenom_data?: R2Bucket; // R2 binding (present in deployed env)
 };
@@ -20,7 +18,7 @@ export default {
 	async fetch(request: Request, env: Env): Promise<Response> {
 		const url = new URL(request.url);
 
-		// Local dev proxy: keep your static file server running on 8081
+		// Local dev proxy: keep your static server running on 8081
 		// cd C:\Users\JDewe\Documents\customvenom\customvenom\customvenom-data-pipelines
 		// npx http-server -p 8081 .
 		const LOCAL_BASE = "http://127.0.0.1:8081";
@@ -39,13 +37,13 @@ export default {
 
 		const ok = (body: string, contentType = "application/json", key?: string) => {
 			const h = cors(new Headers({ "content-type": contentType }));
-			if (key) h.set("x-key", key);
+			if (key) h.set("x-key", key); // optional debug
 			return new Response(body, { headers: h });
 		};
 
 		const notFound = (msg: string, key?: string) => {
 			const h = cors(new Headers({ "content-type": "text/plain" }));
-			if (key) h.set("x-key", key);
+			if (key) h.set("x-key", key); // optional debug
 			return new Response(msg, { status: 404, headers: h });
 		};
 
