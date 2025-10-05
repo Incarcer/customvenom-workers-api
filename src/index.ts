@@ -1,61 +1,71 @@
-/**
- * Welcome to Cloudflare Workers! This is your first worker.
- *
- * - Run `npm run dev` in your terminal to start a development server
- * - Open a browser tab at http://localhost:8787/ to see your worker in action
- * - Run `npm run deploy` to publish your worker
- *
- * Bind resources to your worker in `wrangler.jsonc`. After adding bindings, a type definition for the
- * `Env` object can be regenerated with `npm run cf-typegen`.
- *
- * Learn more at https://developers.cloudflare.com/workers/
- */
+type Env = {};
 
-import { Hono } from 'hono'
-
-import { cors } from 'hono/cors'
-
-import type { Env } from '../worker-configuration' 
-
-const app = new Hono()
-
-// CORS for local dev + your domain
-
-app.use('*', cors({
-
-origin: ['http://localhost:3000', 'https://customvenom.com', 'https://www.customvenom.com'],
-
-allowMethods: ['GET', 'POST', 'OPTIONS'],
-
-allowHeaders: ['Content-Type', 'Authorization'],
-
-}))
-
-app.get('/health', (c) => c.json({ ok: true }))
-
-
-app.get('/info', (c) => {
-
-const env = c.env as Env
-
-return c.json({ endpoint: env.R2_ENDPOINT, bucket: env.R2_BUCKET })
-
-})
-app.get('/', (c) => c.json({ service: 'customvenom-api', ok: true }))
-app.post('/league/config', async (c) => {
-
-try {
-
-const body = await c.req.json()
-
-return c.json({ received: body }, 200)
-
-} catch {
-
-return c.json({ error: 'Invalid JSON' }, 400)
-
+function q(url: URL, key: string, fallback: string) {
+	const v = url.searchParams.get(key);
+	return v && v.trim() ? v.trim() : fallback;
 }
 
-})
+function cors(h: Headers) {
+	h.set("access-control-allow-origin", "*");
+	h.set("access-control-allow-methods", "GET, OPTIONS");
+	h.set("access-control-allow-headers", "Content-Type");
+	return h;
+}
 
-export default app
+export default {
+	async fetch(request: Request, _env: Env): Promise<Response> {
+		const url = new URL(request.url);
+
+		// CHANGE THIS to match your running static server (8080 or 8081)
+		const LOCAL_BASE = "http://127.0.0.1:8081";
+
+		// CORS preflight
+		if (request.method === "OPTIONS") {
+			return new Response(null, { headers: cors(new Headers()) });
+		}
+
+		const league = q(url, "league", "nfl");
+		const year = q(url, "year", "2025");
+		const week = q(url, "week", "5");
+
+		try {
+			if (url.pathname === "/stats/espn") {
+				const upstream = `${LOCAL_BASE}/data/stats/${league}/${year}/week=${week}/espn.json`;
+				const r = await fetch(upstream);
+				if (!r.ok) {
+					return new Response(`Upstream not found: ${upstream}`, {
+						status: 404,
+						headers: cors(new Headers({ "content-type": "text/plain" })),
+					});
+				}
+				const body = await r.text();
+				return new Response(body, {
+					headers: cors(new Headers({ "content-type": "application/json" })),
+				});
+			}
+
+			if (url.pathname === "/projections/baseline") {
+				const upstream = `${LOCAL_BASE}/data/projections/${league}/${year}/week=${week}/baseline.json`;
+				const r = await fetch(upstream);
+				if (!r.ok) {
+					return new Response(`Upstream not found: ${upstream}`, {
+						status: 404,
+						headers: cors(new Headers({ "content-type": "text/plain" })),
+					});
+				}
+				const body = await r.text();
+				return new Response(body, {
+					headers: cors(new Headers({ "content-type": "application/json" })),
+				});
+			}
+
+			return new Response("Not Found", { status: 404, headers: cors(new Headers()) });
+		} catch (err: any) {
+			const msg = err?.stack || err?.message || String(err);
+			return new Response(`Proxy error: ${msg}`, {
+				status: 500,
+				headers: cors(new Headers({ "content-type": "text/plain" })),
+			});
+		}
+	},
+} satisfies ExportedHandler;

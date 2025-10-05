@@ -1,77 +1,33 @@
-/**
- * For more details on how to configure Wrangler, refer to:
- * https://developers.cloudflare.com/workers/wrangler/configuration/
- */
 {
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "customvenom-workers-api",
+  "main": "src/index.ts",
 
-"$schema": "node_modules/wrangler/config-schema.json",
+  // Use a supported compatibility date to avoid the wrangler warning you saw.
+  // When you upgrade wrangler globally, you can bump this back up.
+  "compatibility_date": "2025-09-27",
 
-"name": "customvenom-workers-api",
+  // Optional dashboard logs/metrics
+  "observability": {
+    "enabled": true
+  },
 
-"main": "src/index.ts",
+  // Simple environment variables (non-secret)
+  // Remove or adjust if you don't want these yet.
+  "vars": {
+    "R2_ENDPOINT": "https://a1bea2b4d0102a08b0fec14a6be3b75f.r2.cloudflarestorage.com",
+    "R2_BUCKET": "customvenom-data"
+  },
 
-"compatibility_date": "2025-10-01",
-
-// Optional: keeps logs/metrics visible in Cloudflare dashboard
-
-"observability": {
-
-"enabled": true
-
-},
-
-// Add these when you create KV/R2 in the dashboard
-
-// "kv_namespaces": [
-
-//   { "binding": "KV", "id": "YOUR_KV_NAMESPACE_ID" }
-
-// ],
-
-// "r2_buckets": [
-
-//   { "binding": "R2", "bucket_name": "customvenom-data" }
-
-// ],
-
-// Simple environment variables your Worker can read as env.R2_ENDPOINT / env.R2_BUCKET
-
-"vars": {
-
-"R2_ENDPOINT": "https://a1bea2b4d0102a08b0fec14a6be3b75f.r2.cloudflarestorage.com",
-
-"R2_BUCKET": "customvenom-data"
-
+  // Environment-specific overrides
+  "env": {
+    "preview": {
+      "name": "customvenom-workers-api-preview"
+      // Add bindings here later (e.g., r2_buckets, vars, routes)
+    },
+    "production": {
+      "name": "customvenom-workers-api"
+      // Add bindings here later (e.g., r2_buckets, vars, routes)
+    }
+  }
 }
-
-}
-	/**
-	 * Smart Placement
-	 * Docs: https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
-	 */
-	// "placement": { "mode": "smart" }
-	/**
-	 * Bindings
-	 * Bindings allow your Worker to interact with resources on the Cloudflare Developer Platform, including
-	 * databases, object storage, AI inference, real-time communication and more.
-	 * https://developers.cloudflare.com/workers/runtime-apis/bindings/
-	 */
-	/**
-	 * Environment Variables
-	 * https://developers.cloudflare.com/workers/wrangler/configuration/#environment-variables
-	 */
-	// "vars": { "MY_VARIABLE": "production_value" }
-	/**
-	 * Note: Use secrets to store sensitive data.
-	 * https://developers.cloudflare.com/workers/configuration/secrets/
-	 */
-	/**
-	 * Static Assets
-	 * https://developers.cloudflare.com/workers/static-assets/binding/
-	 */
-	// "assets": { "directory": "./public/", "binding": "ASSETS" }
-	/**
-	 * Service Bindings (communicate between multiple Workers)
-	 * https://developers.cloudflare.com/workers/wrangler/configuration/#service-bindings
-	 */
-	// "services": [{ "binding": "MY_SERVICE", "service": "my-service" }]
