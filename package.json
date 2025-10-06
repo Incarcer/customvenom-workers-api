@@ -28,7 +28,9 @@
 
 "dev:remote": "wrangler dev --remote",
 
-"kill:ports": "npx kill-port 8080 8081 8787 8788"
+"kill:ports": "npx kill-port 8080 8081 8787 8788",
+
+"etl:all": "etl-validate.yml"
 
 },
 
