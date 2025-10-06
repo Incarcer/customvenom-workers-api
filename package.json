@@ -1,53 +1,29 @@
 {
+  "name": "customvenom-workers-api",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev",
+    "start": "wrangler dev",
+    "test": "vitest",
+    "cf-typegen": "wrangler types",
 
-"name": "customvenom-workers-api",
+    "serve:files": "http-server -p 8081 ../customvenom-data-pipelines",
+    "serve:worker": "wrangler dev --local",
+    "dev:local": "concurrently -k -n files,worker -c blue,magenta npm:serve:files npm:serve:worker",
 
-"version": "0.0.0",
-
-"private": true,
-
-"type": "module",
-
-"scripts": {
-
-"deploy": "wrangler deploy",
-
-"dev": "wrangler dev",
-
-"start": "wrangler dev",
-
-"test": "vitest",
-
-"cf-typegen": "wrangler types",
-
-"serve:files": "http-server -p 8081 ../customvenom-data-pipelines",
-
-"serve:worker": "wrangler dev --local",
-
-"dev:local": "concurrently -k -n files,worker -c blue,magenta npm:serve:files npm:serve:worker",
-
-"dev:remote": "wrangler dev --remote",
-
-"kill:ports": "npx kill-port 8080 8081 8787 8788"
-
-},
-
-"devDependencies": {
-
-"@cloudflare/vitest-pool-workers": "^0.8.19",
-
-"concurrently": "8.2.2",
-
-"http-server": "14.1.1",
-
-"hono": "^4.9.9",
-
-"typescript": "^5.5.2",
-
-"vitest": "~3.2.0",
-
-"wrangler": "4.42.0"
-
-}
-
+    "dev:remote": "wrangler dev --remote",
+    "kill:ports": "npx kill-port 8080 8081 8787 8788"
+  },
+  "devDependencies": {
+    "@cloudflare/vitest-pool-workers": "^0.8.19",
+    "concurrently": "8.2.2",
+    "hono": "^4.9.9",
+    "http-server": "14.1.1",
+    "typescript": "^5.5.2",
+    "vitest": "~3.2.0",
+    "wrangler": "4.42.0"
+  }
 }
