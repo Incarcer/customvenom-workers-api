@@ -24,7 +24,7 @@
 
     "etl:all": "cd ../customvenom-data-pipelines && npm ci || true && npm run etl:all",
     "validate:all": "cd ../customvenom-data-pipelines && npm run validate:all"
-  }
+  },
 
 
 "devDependencies": {
