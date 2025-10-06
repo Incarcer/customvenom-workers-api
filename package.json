@@ -8,31 +8,24 @@
 
 "type": "module",
 
+
 "scripts": {
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev",
+    "start": "wrangler dev",
+    "test": "vitest",
+    "cf-typegen": "wrangler types",
 
-"deploy": "wrangler deploy",
+    "serve:files": "http-server -p 8081 ../customvenom-data-pipelines",
+    "serve:worker": "wrangler dev --local",
+    "dev:local": "concurrently -k -n files,worker -c blue,magenta npm:serve:files npm:serve:worker",
+    "dev:remote": "wrangler dev --remote",
+    "kill:ports": "npx kill-port 8080 8081 8787 8788",
 
-"dev": "wrangler dev",
+    "etl:all": "cd ../customvenom-data-pipelines && npm ci || true && npm run etl:all",
+    "validate:all": "cd ../customvenom-data-pipelines && npm run validate:all"
+  }
 
-"start": "wrangler dev",
-
-"test": "vitest",
-
-"cf-typegen": "wrangler types",
-
-"serve:files": "http-server -p 8081 ../customvenom-data-pipelines",
-
-"serve:worker": "wrangler dev --local",
-
-"dev:local": "concurrently -k -n files,worker -c blue,magenta npm:serve:files npm:serve:worker",
-
-"dev:remote": "wrangler dev --remote",
-
-"kill:ports": "npx kill-port 8080 8081 8787 8788",
-
-"etl:all": "../customvenom-workers-api/.github/workflows/etl-validate.yml"
-
-},
 
 "devDependencies": {
 
