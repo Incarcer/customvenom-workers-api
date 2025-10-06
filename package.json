@@ -30,7 +30,7 @@
 
 "kill:ports": "npx kill-port 8080 8081 8787 8788",
 
-"etl:all": "etl-validate.yml"
+"etl:all": "../customvenom-workers-api/.github/workflows/etl-validate.yml"
 
 },
 
